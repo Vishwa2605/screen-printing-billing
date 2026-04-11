@@ -5,6 +5,11 @@
   const quantityInput = document.getElementById("recordQuantityInput");
   const gramsInput = document.getElementById("recordGramsInput");
   const recordsTableBody = document.getElementById("recordsTableBody");
+
+  // ✅ NEW (Search)
+  const searchInput = document.getElementById("recordSearchInput");
+  let allRecords = [];
+
   const productSuggestions = document.getElementById("recordProductSuggestions");
   const recordAutosaveStatus = document.getElementById("recordAutosaveStatus");
 
@@ -17,10 +22,7 @@
   let editingRecordId = "";
 
   function setAutosaveStatus(text, state) {
-    if (!recordAutosaveStatus) {
-      return;
-    }
-
+    if (!recordAutosaveStatus) return;
     recordAutosaveStatus.textContent = text;
     recordAutosaveStatus.dataset.state = state || "";
   }
@@ -41,11 +43,30 @@
       .join("");
   }
 
+  // ✅ UPDATED (store records + filter)
   async function renderRecords() {
     const records = await window.StorageEngine.getProductionRecords();
+    allRecords = records;
+
+    applySearchFilter();
+  }
+
+  // ✅ NEW SEARCH FUNCTION
+  function applySearchFilter() {
+    let records = allRecords;
+
+    const query = (searchInput?.value || "").toLowerCase().trim();
+
+    if (query) {
+      records = allRecords.filter(record =>
+        (record.product || "").toLowerCase().includes(query) ||
+        (record.batchNo || "").toLowerCase().includes(query)
+      );
+    }
 
     if (!records.length) {
-      recordsTableBody.innerHTML = '<tr><td colspan="7" class="empty-state">No production records saved yet.</td></tr>';
+      recordsTableBody.innerHTML =
+        '<tr><td colspan="7" class="empty-state">No matching records found.</td></tr>';
       return;
     }
 
@@ -73,6 +94,7 @@
     quantityInput.value = "";
     gramsInput.value = "";
     dateInput.value = new Date().toISOString().slice(0, 10);
+
     await window.StorageEngine.saveRecordDraft({
       product: "",
       batchNo: "",
@@ -115,8 +137,10 @@
     await window.StorageEngine.saveProduct(payload.product);
     await window.StorageEngine.saveProductionRecord(payload);
     lastSavedSignature = signature;
+
     await renderProductSuggestions();
     await renderRecords();
+
     setAutosaveStatus("Record saved", "saved");
     editingRecordId = "";
     await resetForm();
@@ -124,9 +148,9 @@
 
   function queueAutosave() {
     setAutosaveStatus("Saving...", "saving");
-    window.clearTimeout(autosaveTimer);
-    autosaveTimer = window.setTimeout(() => {
-      void saveRecordDraftAndMaybeCommit();
+    clearTimeout(autosaveTimer);
+    autosaveTimer = setTimeout(() => {
+      saveRecordDraftAndMaybeCommit();
     }, 450);
   }
 
@@ -134,6 +158,11 @@
     input.addEventListener("input", queueAutosave);
     input.addEventListener("change", queueAutosave);
   });
+
+  // ✅ SEARCH LISTENER
+  if (searchInput) {
+    searchInput.addEventListener("input", applySearchFilter);
+  }
 
   recordsTableBody.addEventListener("click", async (event) => {
     const editButton = event.target.closest(".edit-record-btn");
@@ -155,33 +184,30 @@
       return;
     }
 
-    if (!deleteButton) {
-      return;
-    }
+    if (!deleteButton) return;
 
     const recordId = deleteButton.dataset.recordId;
-    if (!recordId) {
-      return;
-    }
+    if (!recordId) return;
 
     const shouldDelete = window.confirm("Delete this production record?");
-    if (!shouldDelete) {
-      return;
-    }
+    if (!shouldDelete) return;
 
     await window.StorageEngine.deleteProductionRecord(recordId);
+
     if (editingRecordId === recordId) {
       editingRecordId = "";
       await resetForm();
     }
+
     await renderRecords();
   });
 
   const unsubscribeProducts = window.StorageEngine.subscribeToTable("products", () => {
-    void renderProductSuggestions();
+    renderProductSuggestions();
   });
+
   const unsubscribeRecords = window.StorageEngine.subscribeToTable("production_records", () => {
-    void renderRecords();
+    renderRecords();
   });
 
   window.addEventListener("beforeunload", () => {
@@ -191,6 +217,7 @@
 
   (async () => {
     const draft = await window.StorageEngine.getRecordDraft();
+
     if (draft) {
       productInput.value = draft.product || "";
       batchInput.value = draft.batchNo || "";
