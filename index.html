@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#bc6c25">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>Screen Printing Billing - Dashboard</title>
+  <link rel="manifest" href="/manifest.json">
+  <link rel="stylesheet" href="./css/style.css">
+  <link rel="icon" href="data:,">
+</head>
+<body>
+  <div class="bg-orb orb-one"></div>
+  <div class="bg-orb orb-two"></div>
+  <div class="app-shell">
+    <header class="hero-card">
+      <div class="hero-copy-block">
+        <p class="eyebrow">Screen Printing Billing Software</p>
+        <h1>Invoice Dashboard</h1>
+      </div>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="/invoice.html">+ New Invoice</a>
+        <a class="btn btn-secondary" href="/products.html">Products</a>
+        <a class="btn btn-secondary" href="/records.html">Production Log</a>
+        <button class="btn btn-secondary" id="clearInvoicesBtn" type="button">Clear All</button>
+      </div>
+    </header>
+
+    <nav class="quick-nav">
+      <a class="quick-nav-link" href="/invoice.html">Invoice</a>
+      <a class="quick-nav-link active" href="/index.html">Dashboard</a>
+      <a class="quick-nav-link" href="/products.html">Products</a>
+      <a class="quick-nav-link" href="/records.html">Production Log</a>
+    </nav>
+
+    <main class="panel">
+      <div class="panel-head">
+        <div>
+          <h2>Saved Invoices</h2>
+          <p class="muted">Everything is stored in this browser using LocalStorage.</p>
+        </div>
+        <div class="stats-pill" id="invoiceCount">0 invoices</div>
+      </div>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Date</th>
+              <th>Messers</th>
+              <th>Items</th>
+              <th>Total</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="invoiceTableBody">
+            <tr>
+              <td colspan="6" class="empty-state">No invoices saved yet.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/js/supabase-config.js"></script>
+  <script src="/js/storage.js"></script>
+  <script src="/js/dashboard.js"></script>
+  <script>
+window.addEventListener("load", () => {
+  if (
+    location.hostname !== "127.0.0.1" &&
+    location.hostname !== "localhost"
+  ) {
+    const script = document.createElement("script");
+    script.src = "/js/pwa.js";
+    document.body.appendChild(script);
+  }
+});
+</script>
+</body>
+</html>

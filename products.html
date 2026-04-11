@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#bc6c25">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>Screen Printing Billing - Products</title>
+  <link rel="manifest" href="/manifest.json">
+  <link rel="stylesheet" href="./css/style.css">
+  <link rel="icon" href="data:,">
+</head>
+<body>
+  <div class="bg-orb orb-one"></div>
+  <div class="bg-orb orb-two"></div>
+  <div class="app-shell">
+    <header class="hero-card compact">
+      <div class="hero-copy-block">
+        <p class="eyebrow">Product Master</p>
+        <h1>Manage Product Names</h1>
+      </div>
+      <div class="hero-actions">
+        <a class="btn btn-secondary" href="/index.html">Dashboard</a>
+        <a class="btn btn-secondary" href="/invoice.html">New Invoice</a>
+        <a class="btn btn-secondary" href="/records.html">Production Log</a>
+      </div>
+    </header>
+
+    <nav class="quick-nav">
+      <a class="quick-nav-link" href="/invoice.html">Invoice</a>
+      <a class="quick-nav-link" href="/index.html">Dashboard</a>
+      <a class="quick-nav-link active" href="/products.html">Products</a>
+      <a class="quick-nav-link" href="/records.html">Production Log</a>
+    </nav>
+
+    <section class="panel">
+      <div class="panel-head">
+        <div><h2>Add Product</h2></div>
+        <div class="stats-pill" id="productCountChip">0 products</div>
+      </div>
+
+      <div class="toolbar-grid">
+        <label class="field">
+          <span>Product Name</span>
+          <input id="productNameInput" type="text" placeholder="Example: AMLA 227 GM">
+        </label>
+        <div class="toolbar-actions">
+          <button class="btn btn-primary" id="addProductBtn" type="button">Add Product</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <div><h2>Saved Products</h2></div>
+      </div>
+
+      <div class="toolbar-grid compact-toolbar">
+        <label class="field field-wide">
+          <span>Search</span>
+          <input id="productSearchInput" type="text" placeholder="Search product names">
+        </label>
+      </div>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Product Name</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="productsTableBody">
+            <tr>
+              <td colspan="3" class="empty-state">No products saved yet.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/js/supabase-config.js"></script>
+  <script src="/js/storage.js"></script>
+  <script src="/js/products.js"></script>
+  <script>
+window.addEventListener("load", () => {
+  if (
+    location.hostname !== "127.0.0.1" &&
+    location.hostname !== "localhost"
+  ) {
+    const script = document.createElement("script");
+    script.src = "/js/pwa.js";
+    document.body.appendChild(script);
+  }
+});
+</script>
+</body>
+</html>

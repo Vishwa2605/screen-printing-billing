@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#bc6c25">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>Screen Printing Billing - Production Log</title>
+  <link rel="manifest" href="/manifest.json">
+  <link rel="stylesheet" href="./css/style.css">
+  <link rel="icon" href="data:,">
+</head>
+<body>
+  <div class="bg-orb orb-one"></div>
+  <div class="bg-orb orb-two"></div>
+  <div class="app-shell">
+    <header class="hero-card compact">
+      <div class="hero-copy-block">
+        <p class="eyebrow">Production Register</p>
+        <h1>Printed Product Records</h1>
+      </div>
+      <div class="hero-actions">
+        <a class="btn btn-secondary" href="/index.html">Dashboard</a>
+        <a class="btn btn-secondary" href="/invoice.html">New Invoice</a>
+        <a class="btn btn-secondary" href="/products.html">Products</a>
+      </div>
+    </header>
+
+    <nav class="quick-nav">
+      <a class="quick-nav-link" href="/invoice.html">Invoice</a>
+      <a class="quick-nav-link" href="/index.html">Dashboard</a>
+      <a class="quick-nav-link" href="/products.html">Products</a>
+      <a class="quick-nav-link active" href="/records.html">Production Log</a>
+    </nav>
+
+    <section class="panel">
+      <div class="panel-head">
+        <div><h2>Add Production Entry</h2></div>
+      </div>
+
+      <div class="form-grid record-grid">
+        <label class="field">
+          <span>Product Name</span>
+          <input id="recordProductInput" type="text" list="recordProductSuggestions" placeholder="Search or type product">
+        </label>
+        <label class="field">
+          <span>PHX / Batch No.</span>
+          <input id="recordBatchInput" type="text" placeholder="Batch number">
+        </label>
+        <label class="field">
+          <span>Date</span>
+          <input id="recordDateInput" type="date">
+        </label>
+        <label class="field">
+          <span>Quantity</span>
+          <input id="recordQuantityInput" type="number" min="0" step="1" placeholder="0">
+        </label>
+        <label class="field">
+          <span>No. of Grams</span>
+          <input id="recordGramsInput" type="number" min="0" step="1" placeholder="0">
+        </label>
+        <div class="toolbar-actions align-end">
+          <div class="autosave-indicator" id="recordAutosaveStatus">Autosave ready</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <div><h2>Saved Records</h2></div>
+      </div>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Sr No.</th>
+              <th>Product Name</th>
+              <th>PHX / Batch No.</th>
+              <th>Quantity</th>
+              <th>Grams</th>
+              <th>Date</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="recordsTableBody">
+            <tr>
+              <td colspan="7" class="empty-state">No production records saved yet.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <datalist id="recordProductSuggestions"></datalist>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/js/supabase-config.js"></script>
+  <script src="/js/storage.js"></script>
+  <script src="/js/records.js"></script>
+  <script>
+window.addEventListener("load", () => {
+  if (
+    location.hostname !== "127.0.0.1" &&
+    location.hostname !== "localhost"
+  ) {
+    const script = document.createElement("script");
+    script.src = "/js/pwa.js";
+    document.body.appendChild(script);
+  }
+});
+</script>
+</body>
+</html>

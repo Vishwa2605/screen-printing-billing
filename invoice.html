@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#bc6c25">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>Screen Printing Billing - Invoice</title>
+  <link rel="manifest" href="/manifest.json">
+  <link rel="stylesheet" href="./css/style.css">
+  <link rel="icon" href="data:,">
+</head>
+<body>
+  <div class="bg-orb orb-one"></div>
+  <div class="bg-orb orb-two"></div>
+  <div class="app-shell">
+    <header class="hero-card compact">
+      <div class="hero-copy-block">
+        <p class="eyebrow">Offline Billing Workspace</p>
+        <h1 id="pageTitle">Create Invoice</h1>
+      </div>
+      <div class="hero-actions">
+        <a class="btn btn-secondary" href="/index.html">Back to Dashboard</a>
+        <a class="btn btn-secondary" href="/products.html">Products</a>
+        <a class="btn btn-secondary" href="/records.html">Production Log</a>
+        <div class="autosave-indicator" id="invoiceAutosaveStatus">Autosave ready</div>
+      </div>
+    </header>
+
+    <nav class="quick-nav">
+      <a class="quick-nav-link active" href="/invoice.html">Invoice</a>
+      <a class="quick-nav-link" href="/index.html">Dashboard</a>
+      <a class="quick-nav-link" href="/products.html">Products</a>
+      <a class="quick-nav-link" href="/records.html">Production Log</a>
+    </nav>
+    <main class="invoice-layout">
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Invoice Details</h2>
+        </div>
+
+        <div class="form-grid">
+          <label class="field">
+            <span>Invoice No</span>
+            <input id="invoiceNo" type="text" placeholder="Enter invoice number">
+          </label>
+          <label class="field">
+            <span>Date</span>
+            <input id="invoiceDate" type="text" inputmode="numeric" placeholder="dd/mm/yyyy">
+          </label>
+          <label class="field field-wide">
+            <span>Messers</span>
+            <input id="messers" type="text" list="messersSuggestions" placeholder="Customer / party name">
+          </label>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>Items</h2>
+            <p class="muted">Select size, quantity, and print options for each row.</p>
+          </div>
+          <button class="btn btn-primary" id="addRowBtn" type="button">+ Add Row</button>
+        </div>
+
+        <div class="table-wrap">
+          <table class="data-table invoice-table">
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>Particulars</th>
+                <th>F1</th>
+                <th>F2</th>
+                <th>F3</th>
+                <th>F4</th>
+                <th>B</th>
+                <th>D</th>
+                <th>Size 1</th>
+                <th>Size 2</th>
+                <th>Grams</th>
+                <th>Qty</th>
+                <th>Amount</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="itemsTableBody"></tbody>
+          </table>
+        </div>
+
+        <div class="table-actions">
+          <div class="hint-box">
+            <strong>Pricing Rule</strong>
+            <span>S1 = 500, S2 = 600, F1/B every 500, F2/F3/F4 every 1000, D = 50.</span>
+          </div>
+          <div class="total-box">
+            <span>Total</span>
+            <strong id="grandTotal">0.00</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel action-panel">
+        <button class="btn btn-secondary" id="printInvoiceBtn" type="button">Print / Download PDF</button>
+      </section>
+    </main>
+  </div>
+
+  <template id="rowTemplate">
+    <tr>
+      <td class="sr-no">1</td>
+      <td>
+        <div class="product-cell">
+          <input class="row-product" type="text" placeholder="Product name" list="productSuggestions">
+          <button class="mini-btn add-product-btn" type="button">+ Product</button>
+        </div>
+      </td>
+      <td><input class="row-flag row-f1" type="checkbox"></td>
+      <td><input class="row-flag row-f2" type="checkbox"></td>
+      <td><input class="row-flag row-f3" type="checkbox"></td>
+      <td><input class="row-flag row-f4" type="checkbox"></td>
+      <td><input class="row-flag row-b" type="checkbox"></td>
+      <td><input class="row-flag row-d" type="checkbox"></td>
+      <td><input class="row-size row-s1" type="radio"></td>
+      <td><input class="row-size row-s2" type="radio"></td>
+      <td><input class="row-grams" type="text" placeholder="100GM" list="gramsSuggestions"></td>
+      <td><input class="row-qty qty-input" type="number" min="0" step="1" value="0"></td>
+      <td>
+        <div class="amount-cell">
+          <input class="row-amount-input amount-input" type="number" min="0" step="0.01" value="0.00">
+          <span class="amount-mode-badge">Auto</span>
+        </div>
+      </td>
+      <td>
+        <div class="row-tools">
+          <button class="mini-btn toggle-amount-btn" type="button">Recalc</button>
+          <button class="icon-btn delete-row-btn" type="button">Delete</button>
+        </div>
+      </td>
+    </tr>
+  </template>
+
+  <datalist id="productSuggestions"></datalist>
+  <datalist id="gramsSuggestions">
+    <option value="100GM"></option>
+    <option value="227GM"></option>
+    <option value="454GM"></option>
+    <option value="1KG"></option>
+    <option value="2LB"></option>
+  </datalist>
+  <datalist id="messersSuggestions">
+    <option value="PHOENIX MEDICAMENTS PVT. LTD."></option>
+  </datalist>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/js/supabase-config.js"></script>
+  <script src="/js/storage.js"></script>
+  <script src="/js/invoice.js"></script>
+  <script>
+window.addEventListener("load", () => {
+  if (
+    location.hostname !== "127.0.0.1" &&
+    location.hostname !== "localhost"
+  ) {
+    const script = document.createElement("script");
+    script.src = "/js/pwa.js";
+    document.body.appendChild(script);
+  }
+});
+</script>
+</body>
+</html>
