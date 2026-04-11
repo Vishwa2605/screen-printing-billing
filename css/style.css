@@ -573,3 +573,19 @@ input[type="radio"] {
     border: 0;
   }
 }
+
+#recordSearchInput {
+  padding: 10px 14px;
+  width: 260px;
+  border-radius: 20px;
+  border: 1px solid #d6ccc2;
+  background: #fff;
+  font-size: 14px;
+  transition: 0.2s ease;
+}
+
+#recordSearchInput:focus {
+  outline: none;
+  border-color: #bc6c25;
+  box-shadow: 0 0 0 2px rgba(188,108,37,0.15);
+}
